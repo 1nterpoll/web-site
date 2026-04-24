@@ -8,11 +8,13 @@ import { ShoppingCart, User, Search, Sun, Moon, Heart } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useWishlist } from '../contexts/WishlistContext';
+import { useCart } from '../contexts/CartContext';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { EXCHANGE_RATES, CurrencyCode } from '../constants';
 
 export default function Navbar() {
   const { wishlist } = useWishlist();
+  const { cartItems } = useCart();
   const { currency, setCurrency } = useCurrency();
   const [isDark, setIsDark] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -118,9 +120,11 @@ export default function Navbar() {
 
           <Link to="/cart" className="relative text-gray-600 dark:text-gray-400 hover:text-primary transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
             <ShoppingCart className="w-5 h-5" />
-            <span className="absolute top-1 right-1 bg-tertiary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
-              3
-            </span>
+            {cartItems.length > 0 && (
+              <span className="absolute top-1 right-1 bg-tertiary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
+              </span>
+            )}
           </Link>
         </div>
       </div>

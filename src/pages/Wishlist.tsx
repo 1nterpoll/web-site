@@ -15,7 +15,7 @@ export default function Wishlist() {
   return (
     <div className="py-8 min-h-screen">
       <header className="mb-12">
-        <h1 className="text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">Избранное</h1>
+        <h1 className="text-5xl font-black text-black mb-4 tracking-tight">Избранное</h1>
         <p className="text-xl text-gray-500 dark:text-gray-400">
           {wishlist.length === 0 
             ? 'Здесь будут товары, которые вам понравились.' 

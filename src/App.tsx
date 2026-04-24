@@ -17,6 +17,7 @@ import Wishlist from './pages/Wishlist';
 import SearchResults from './pages/SearchResults';
 import { WishlistProvider } from './contexts/WishlistContext';
 import { CurrencyProvider } from './contexts/CurrencyContext';
+import { CartProvider } from './contexts/CartContext';
 import ChatSupport from './components/ChatSupport';
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
@@ -62,11 +63,13 @@ function AppContent() {
 export default function App() {
   return (
     <Router>
-      <WishlistProvider>
-        <CurrencyProvider>
-          <AppContent />
-        </CurrencyProvider>
-      </WishlistProvider>
+      <CartProvider>
+        <WishlistProvider>
+          <CurrencyProvider>
+            <AppContent />
+          </CurrencyProvider>
+        </WishlistProvider>
+      </CartProvider>
     </Router>
   );
 }

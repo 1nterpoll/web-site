@@ -9,6 +9,7 @@ import { Product } from '../types';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../contexts/WishlistContext';
+import { useCart } from '../contexts/CartContext';
 import { useCurrency } from '../contexts/CurrencyContext';
 
 interface ProductCardProps {
@@ -17,6 +18,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { addToCart } = useCart();
   const { formatPrice } = useCurrency();
   const isWishlisted = isInWishlist(product.id);
 
@@ -93,6 +95,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
           <div className="relative group/cart-btn">
             <motion.button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (product.stock !== 'out_of_stock') {
+                  addToCart(product);
+                }
+              }}
               whileTap={product.stock === 'out_of_stock' ? {} : { scale: 0.9 }}
               disabled={product.stock === 'out_of_stock'}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors shadow-lg ${

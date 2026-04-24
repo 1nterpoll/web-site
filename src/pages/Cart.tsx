@@ -3,35 +3,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { PRODUCTS } from '../constants';
 import { Minus, Plus, Trash2, ArrowRight, Lock, Verified, History, Headphones } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useCurrency } from '../contexts/CurrencyContext';
+import { useCart } from '../contexts/CartContext';
 import ProductCard from '../components/ProductCard';
 
 export default function Cart() {
   const { formatPrice } = useCurrency();
-  const [cartItems, setCartItems] = useState([
-    { ...PRODUCTS[0], quantity: 1 },
-    { ...PRODUCTS[2], quantity: 2 },
-    { ...PRODUCTS[3], quantity: 1 },
-  ]);
-
-  const updateQuantity = (id: string, delta: number) => {
-    setCartItems(items => items.map(item => {
-      if (item.id === id) {
-        const newQuantity = Math.max(1, item.quantity + delta);
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
-    }));
-  };
-
-  const removeItem = (id: string) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
+  const { cartItems, updateQuantity, removeItem } = useCart();
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const shipping = 12.00;
@@ -69,7 +52,7 @@ export default function Cart() {
           </div>
 
           <div className="space-y-8">
-            <h3 className="text-3xl font-black text-gray-900 dark:text-white">Возможно, вас заинтересует</h3>
+            <h3 className="text-3xl font-black text-black">Возможно, вас заинтересует</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {PRODUCTS.slice(0, 4).map((product) => (
                 <ProductCard key={product.id} product={product} />
