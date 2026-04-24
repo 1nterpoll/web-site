@@ -29,7 +29,7 @@ export default function SearchResults() {
       </nav>
 
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-black text-gray-900">
+        <h1 className="text-3xl font-black text-black">
           {query ? `Результаты по запросу "${query}"` : 'Все товары'}
         </h1>
         <span className="text-gray-900 font-bold">{results.length} товаров найдено</span>
@@ -54,7 +54,7 @@ export default function SearchResults() {
              <Inbox className="w-12 h-12 text-primary dark:text-blue-400 -rotate-3" />
           </div>
           <div className="max-w-md space-y-3 relative z-10">
-            <h2 className="text-3xl font-black text-gray-900 dark:text-white">Не смогли найти</h2>
+            <h2 className="text-3xl font-black text-black">Не смогли найти</h2>
             <p className="text-gray-500 dark:text-gray-400 font-medium leading-relaxed">
               К сожалению, по запросу <span className="font-bold text-gray-900 dark:text-white">"{query}"</span> ничего не нашлось. Попробуйте использовать более общие термины или загляните в наш каталог, там много интересного!
             </p>
@@ -71,7 +71,7 @@ export default function SearchResults() {
       {/* Suggested Search Terms */}
       {results.length === 0 && (
         <div className="space-y-4">
-          <h3 className="font-black text-lg text-gray-900 dark:text-white">Популярные запросы:</h3>
+          <h3 className="font-black text-lg text-black">Популярные запросы:</h3>
           <div className="flex flex-wrap gap-3">
             {['LEGO', 'Робот', 'Коляска', 'Игрушки'].map((term) => (
               <Link

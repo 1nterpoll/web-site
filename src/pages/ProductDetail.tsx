@@ -6,15 +6,17 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PRODUCTS } from '../constants';
-import { Star, ShoppingCart, Heart, ShieldCheck, Truck, ChevronRight, User, Send } from 'lucide-react';
+import { Star, ShoppingCart, Heart, ShieldCheck, Truck, ChevronRight, User, Send, Leaf, CheckCircle2, Sparkles, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProductCard from '../components/ProductCard';
 import { useWishlist } from '../contexts/WishlistContext';
+import { useCart } from '../contexts/CartContext';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { Review } from '../types';
 
 export default function ProductDetail() {
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { addToCart } = useCart();
   const { formatPrice } = useCurrency();
   const { id } = useParams();
   const product = PRODUCTS.find((p) => p.id === id) || PRODUCTS[0];
@@ -99,7 +101,7 @@ export default function ProductDetail() {
           <div className="mb-2">
             <span className="text-primary font-black uppercase tracking-widest text-sm">{product.brand}</span>
           </div>
-          <h1 className="text-4xl font-black text-gray-900 mb-6 leading-tight">
+          <h1 className="text-4xl font-black text-black mb-6 leading-tight">
             {product.name}
           </h1>
 
@@ -166,6 +168,11 @@ export default function ProductDetail() {
 
           <div className="flex gap-4 mb-10">
             <button 
+              onClick={() => {
+                if (product.stock !== 'out_of_stock') {
+                  addToCart(product);
+                }
+              }}
               disabled={product.stock === 'out_of_stock'}
               className={`flex-1 h-16 font-black rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-3 shadow-2xl ${
                 product.stock === 'out_of_stock'
@@ -189,7 +196,22 @@ export default function ProductDetail() {
           </div>
 
           <div className="space-y-4 pt-8 border-t border-gray-100 dark:border-gray-800">
-            <div className="flex items-center gap-4 text-gray-700 dark:text-gray-300">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="flex flex-col items-center justify-center p-4 bg-green-50 dark:bg-green-900/10 rounded-2xl border border-green-100 dark:border-green-900/20 text-center space-y-2">
+                <Leaf className="w-5 h-5 text-green-600 dark:text-green-400" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-green-700 dark:text-green-300">🌱 Эко-пластик</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-4 bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-900/20 text-center space-y-2">
+                <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-blue-700 dark:text-blue-300">🛡️ Без BPA</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-4 bg-purple-50 dark:bg-purple-900/10 rounded-2xl border border-purple-100 dark:border-purple-900/20 text-center space-y-2">
+                <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-purple-700 dark:text-purple-300">✨ Гипоаллергенно</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4 text-gray-700 dark:text-gray-300 pt-4">
               <Truck className="w-5 h-5 text-primary" />
               <span className="font-medium">Бесплатная экспресс-доставка от {formatPrice(100)}</span>
             </div>
@@ -201,13 +223,39 @@ export default function ProductDetail() {
         </div>
       </div>
 
+      {/* Unboxing & Reviews Section */}
+      <section className="pt-12 border-t border-outline-variant/20">
+        <h2 className="text-3xl font-black mb-10 text-black uppercase tracking-tight">Распаковка и обзоры</h2>
+        <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="min-w-[200px] md:min-w-[240px] aspect-[9/16] bg-gray-100 dark:bg-gray-800 rounded-[32px] overflow-hidden relative group cursor-pointer border border-gray-200 dark:border-gray-700 shadow-lg">
+              <img 
+                src={`https://images.unsplash.com/photo-1596461402482-97fa17fc7d18?w=500&h=800&fit=crop&q=80&sig=${i}`} 
+                alt="Review" 
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 group-hover:scale-110 transition-all shadow-2xl">
+                  <Play className="w-8 h-8 text-white fill-current translate-x-0.5" />
+                </div>
+              </div>
+              <div className="absolute bottom-6 left-6 right-6">
+                <p className="text-white font-black text-sm uppercase tracking-widest mb-1 shadow-sm">Обзор #{i}</p>
+                <p className="text-white/60 text-[10px] font-bold">KidsMarket Creator</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Reviews Section */}
       <section className="grid grid-cols-12 gap-12 pt-12 border-t border-outline-variant/20">
         <div className="col-span-12 lg:col-span-4 space-y-8">
           <div>
-            <h2 className="text-3xl font-black mb-2 text-gray-900">Отзывы покупателей</h2>
+            <h2 className="text-3xl font-black mb-2 text-black">Отзывы покупателей</h2>
             <div className="flex items-center gap-4">
-              <div className="text-5xl font-black text-gray-900">{product.rating}</div>
+              <div className="text-5xl font-black text-black">{product.rating}</div>
               <div className="space-y-1">
                 <div className="flex text-secondary">
                   {[...Array(5)].map((_, i) => (
@@ -220,7 +268,7 @@ export default function ProductDetail() {
           </div>
 
           <form onSubmit={handleSubmitReview} className="bg-gray-50 dark:bg-gray-800 p-8 rounded-[32px] border border-gray-100 dark:border-gray-700 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Оставить отзыв</h3>
+            <h3 className="text-xl font-bold text-black">Оставить отзыв</h3>
             
             <div className="space-y-2">
               <label className="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Ваша оценка</label>

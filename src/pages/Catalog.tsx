@@ -47,7 +47,7 @@ export default function Catalog() {
       {/* Sidebar Filters */}
       <aside className="w-64 space-y-10 shrink-0 sticky top-32 h-fit">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-black text-gray-900">Фильтры</h2>
+          <h2 className="text-2xl font-black text-black">Фильтры</h2>
           {(selectedCategory !== 'all' || selectedBrands.length > 0 || priceRange.min !== '' || priceRange.max !== '') && (
             <button 
               onClick={() => {
@@ -62,7 +62,7 @@ export default function Catalog() {
           )}
         </div>
         <section>
-          <h3 className="text-xl font-black mb-6 text-gray-900">Категории</h3>
+          <h3 className="text-xl font-black mb-6 text-black">Категории</h3>
           <div className="space-y-1">
             <button
               onClick={() => setSelectedCategory('all')}
@@ -88,7 +88,7 @@ export default function Catalog() {
 
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-black text-gray-900">Фильтры</h3>
+            <h3 className="text-xl font-black text-black">Фильтры</h3>
             <SlidersHorizontal className="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
           <div className="space-y-6">

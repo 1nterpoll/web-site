@@ -16,12 +16,18 @@ interface CartContextType {
   updateQuantity: (id: string, delta: number) => void;
   removeItem: (id: string) => void;
   clearCart: () => void;
+  isGiftWrap: boolean;
+  setIsGiftWrap: (value: boolean) => void;
+  giftMessage: string;
+  setGiftMessage: (message: string) => void;
 }
 
 const CartContext = React.createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartItems, setCartItems] = React.useState<CartItem[]>([]);
+  const [isGiftWrap, setIsGiftWrap] = React.useState(false);
+  const [giftMessage, setGiftMessage] = React.useState('');
 
   const addToCart = (product: Product) => {
     setCartItems((prev) => {
@@ -54,7 +60,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = () => setCartItems([]);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, updateQuantity, removeItem, clearCart }}>
+    <CartContext.Provider value={{ 
+      cartItems, 
+      addToCart, 
+      updateQuantity, 
+      removeItem, 
+      clearCart,
+      isGiftWrap,
+      setIsGiftWrap,
+      giftMessage,
+      setGiftMessage
+    }}>
       {children}
     </CartContext.Provider>
   );

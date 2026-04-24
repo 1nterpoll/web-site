@@ -75,7 +75,7 @@ export default function Home() {
       {/* Categories Grid */}
       <section>
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-black tracking-tight text-gray-900">Поиск по категориям</h2>
+          <h2 className="text-3xl font-black tracking-tight text-black">Поиск по категориям</h2>
           <Link to="/catalog" className="text-primary font-bold hover:underline">Смотреть все</Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
@@ -103,7 +103,7 @@ export default function Home() {
       <section>
         <div className="flex items-center gap-3 mb-8">
           <Icons.Star className="w-7 h-7 text-secondary fill-secondary" />
-          <h2 className="text-3xl font-black tracking-tight text-gray-900">Хиты продаж</h2>
+          <h2 className="text-3xl font-black tracking-tight text-black">Хиты продаж</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {bestsellers.map((product) => (
@@ -115,7 +115,7 @@ export default function Home() {
       {/* Banner - New Style */}
       <section className="bg-gray-50 dark:bg-gray-800/50 rounded-3xl p-12 flex flex-col lg:flex-row items-center justify-between gap-12 overflow-hidden relative">
         <div className="relative z-10 max-w-xl">
-          <h2 className="text-5xl font-black mb-6 leading-tight text-gray-900 dark:text-white">Муслиновый уют для самых маленьких</h2>
+          <h2 className="text-5xl font-black mb-6 leading-tight text-black">Муслиновый уют для самых маленьких</h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">Новая коллекция одежды из 100% натурального муслина. Только мягкость и комфорт.</p>
           <button className="bg-primary text-white px-10 py-4 rounded-xl font-bold hover:bg-primary-container transition-all">
             Смотреть коллекцию

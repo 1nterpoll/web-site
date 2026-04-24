@@ -6,7 +6,7 @@
 import React from 'react';
 import { PRODUCTS } from '../constants';
 import { Minus, Plus, Trash2, ArrowRight, Lock, Verified, History, Headphones } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { useCart } from '../contexts/CartContext';
@@ -14,12 +14,13 @@ import ProductCard from '../components/ProductCard';
 
 export default function Cart() {
   const { formatPrice } = useCurrency();
-  const { cartItems, updateQuantity, removeItem } = useCart();
+  const { cartItems, updateQuantity, removeItem, isGiftWrap, setIsGiftWrap, giftMessage, setGiftMessage } = useCart();
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const giftWrapPrice = 5.00;
   const shipping = 12.00;
   const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const total = subtotal + shipping + tax + (isGiftWrap ? giftWrapPrice : 0);
 
   return (
     <div className="py-8 min-h-screen" id="cart">
@@ -44,7 +45,7 @@ export default function Cart() {
               </svg>
             </div>
             <div className="relative z-10 max-w-md mx-auto space-y-3">
-              <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">В корзине пока пусто</h2>
+              <h2 className="text-3xl font-black text-white tracking-tight">В корзине пока пусто</h2>
               <p className="text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
                 Похоже, вы еще ничего не добавили в корзину. Отправляйтесь в каталог, чтобы найти идеальные товары для вашего малыша!
               </p>
@@ -111,8 +112,40 @@ export default function Cart() {
         {/* Order Summary */}
         <div className="col-span-12 lg:col-span-4 space-y-8 sticky top-32 h-fit">
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl p-8 shadow-sm">
-            <h2 className="text-2xl font-black mb-8 text-gray-900 dark:text-white">Итого к оплате</h2>
+            <h2 className="text-2xl font-black mb-8 text-white">Итого к оплате</h2>
             <div className="space-y-4 mb-8">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only" 
+                    checked={isGiftWrap}
+                    onChange={() => setIsGiftWrap(!isGiftWrap)}
+                  />
+                  <div className={`w-12 h-6 rounded-full transition-colors ${isGiftWrap ? 'bg-primary' : 'bg-gray-200 dark:bg-gray-700'}`} />
+                  <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${isGiftWrap ? 'translate-x-6' : ''}`} />
+                </div>
+                <span className="font-bold text-gray-900 dark:text-white text-sm">Упаковать как подарок (+ {formatPrice(giftWrapPrice)})</span>
+              </label>
+
+              <AnimatePresence>
+                {isGiftWrap && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, height: 0 }}
+                    animate={{ opacity: 1, scale: 1, height: 'auto' }}
+                    exit={{ opacity: 0, scale: 0.95, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <textarea
+                      placeholder="Напишите текст для поздравительной открытки..."
+                      value={giftMessage}
+                      onChange={(e) => setGiftMessage(e.target.value)}
+                      className="w-full h-24 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none mt-2"
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div className="flex justify-between items-center text-gray-900 dark:text-gray-200">
                 <span className="text-gray-500 dark:text-gray-400 font-medium">Подытог</span>
                 <span className="font-bold">{formatPrice(subtotal)}</span>
@@ -125,6 +158,16 @@ export default function Cart() {
                 <span className="text-gray-500 dark:text-gray-400 font-medium">Налоги (8%)</span>
                 <span className="font-bold">{formatPrice(tax)}</span>
               </div>
+              {isGiftWrap && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="flex justify-between items-center text-gray-900 dark:text-gray-200"
+                >
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">Подарочная упаковка</span>
+                  <span className="font-bold">{formatPrice(giftWrapPrice)}</span>
+                </motion.div>
+              )}
               <div className="pt-6 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center text-gray-900 dark:text-white">
                 <span className="font-bold">Итого</span>
                 <span className="text-3xl font-black text-primary dark:text-blue-400">{formatPrice(total)}</span>

@@ -40,7 +40,7 @@ export default function Wishlist() {
             <Heart className="w-14 h-14 text-rose-500 dark:text-rose-400 -rotate-6 fill-rose-500/20" />
           </div>
           <div className="relative z-10 max-w-md mx-auto space-y-4 mb-10">
-            <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Ничего не отложено</h2>
+            <h2 className="text-4xl font-black text-white tracking-tight">Ничего не отложено</h2>
             <p className="text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
               Собирайте здесь игрушки, которые вам понравились. Так вы сможете легко сравнить их и сделать лучший выбор для вашего ребенка.
             </p>
@@ -57,7 +57,7 @@ export default function Wishlist() {
       {/* Featured Recommendations if Empty (Optional) */}
       {wishlist.length === 0 && (
          <section className="mt-24">
-            <h3 className="text-2xl font-black mb-8 text-gray-900 dark:text-white">Посмотрите эти новинки</h3>
+            <h3 className="text-2xl font-black mb-8 text-black">Посмотрите эти новинки</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 opacity-60">
                 {/* We could use real products here, but let's keep it simple for now or show first 4 */}
             </div>

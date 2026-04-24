@@ -25,7 +25,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="font-bold text-gray-900 dark:text-white mb-6">Магазин</h4>
+          <h4 className="font-bold text-black mb-6">Магазин</h4>
           <ul className="space-y-3">
             {['Одежда', 'Игрушки', 'Кормление', 'Коляски'].map((item) => (
               <li key={item}>
@@ -38,7 +38,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="font-bold text-gray-900 dark:text-white mb-6">Поддержка</h4>
+          <h4 className="font-bold text-black mb-6">Поддержка</h4>
           <ul className="space-y-3">
             {['Доставка', 'Возвраты', 'Политика конфиденциальности', 'FAQ'].map((item) => (
               <li key={item}>
@@ -51,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="font-bold text-gray-900 dark:text-white mb-6">Контакты</h4>
+          <h4 className="font-bold text-black mb-6">Контакты</h4>
           <ul className="space-y-3">
             <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
               <Mail className="w-4 h-4 text-primary" /> hello@kidsmarket.com

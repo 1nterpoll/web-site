@@ -15,6 +15,11 @@ export default function Profile() {
   const [activeTab, setActiveTab] = React.useState<'wallet' | 'orders' | 'profile'>('wallet');
   const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
   
+  const [children, setChildren] = React.useState<{name: string, date: string}[]>([
+    { name: 'Миша', date: '2020-05-15' }
+  ]);
+  const [showAddChild, setShowAddChild] = React.useState(false);
+  const [newChild, setNewChild] = React.useState({ name: '', date: '' });
   const [isSaving, setIsSaving] = React.useState(false);
   const [showSaveSuccess, setShowSaveSuccess] = React.useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
@@ -63,7 +68,7 @@ export default function Profile() {
 
         <div className="flex-1 text-center md:text-left space-y-2">
           <div className="flex items-center justify-center md:justify-start gap-4">
-             <h1 className="text-4xl font-black text-gray-900 dark:text-white capitalize">{user.name}</h1>
+             <h1 className="text-4xl font-black text-white capitalize">{user.name}</h1>
              <span className="bg-primary/10 text-primary text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest">{user.membership}</span>
           </div>
           <p className="text-xl text-gray-500 dark:text-gray-400 font-medium">{user.email}</p>
@@ -116,7 +121,7 @@ export default function Profile() {
                >
                  <section>
                     <div className="flex items-center justify-between mb-8">
-                       <h2 className="text-3xl font-black text-gray-900 dark:text-white">Финансовая сводка</h2>
+                       <h2 className="text-3xl font-black text-black">Финансовая сводка</h2>
                        <button className="flex items-center gap-2 text-primary font-bold hover:underline">
                           Больше данных <ArrowUpRight className="w-4 h-4" />
                        </button>
@@ -156,7 +161,7 @@ export default function Profile() {
                  </section>
 
                  <section>
-                    <h2 className="text-2xl font-black mb-8 text-gray-900 dark:text-white">История транзакций</h2>
+                    <h2 className="text-2xl font-black mb-8 text-black">История транзакций</h2>
                     <div className="space-y-4">
                        {TRANSACTIONS.map((t) => (
                           <div key={t.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 flex items-center justify-between group hover:shadow-lg transition-all">
@@ -186,7 +191,81 @@ export default function Profile() {
                   className="space-y-12"
                 >
                   <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[32px] p-8 md:p-12">
-                    <h2 className="text-3xl font-black mb-10 text-gray-900 dark:text-white">Личные данные</h2>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                      <h2 className="text-3xl font-black text-white">Дни рождения детей</h2>
+                      <button 
+                        onClick={() => setShowAddChild(true)}
+                        className="bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-container transition-all flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 text-sm"
+                      >
+                        <PlusCircle className="w-5 h-5" /> Добавить ребенка
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {children.map((child, i) => {
+                        const birthDate = new Date(child.date);
+                        const today = new Date();
+                        const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+                        if (nextBirthday < today) {
+                          nextBirthday.setFullYear(today.getFullYear() + 1);
+                        }
+                        const daysToBirthday = Math.ceil((nextBirthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                        const isSoon = daysToBirthday <= 30;
+
+                        return (
+                          <div key={i} className="relative group">
+                            <div className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 flex items-center gap-6">
+                              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/40 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                <User className="w-8 h-8" />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-black text-lg text-gray-900 dark:text-white leading-tight">{child.name}</h4>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Родился: {child.date}</p>
+                              </div>
+                              <button 
+                                onClick={() => setChildren(children.filter((_, idx) => idx !== i))}
+                                className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                              >
+                                <X className="w-5 h-5" />
+                              </button>
+                            </div>
+
+                            {isSoon && (
+                              <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mt-4 bg-gradient-to-br from-secondary to-orange-500 p-6 rounded-3xl text-white shadow-xl shadow-secondary/20 relative overflow-hidden"
+                              >
+                                <div className="relative z-10 space-y-3">
+                                  <div className="flex items-center gap-2">
+                                    <Award className="w-5 h-5" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Праздник приближается!</span>
+                                  </div>
+                                  <p className="font-bold text-lg leading-tight">У {child.name} скоро день рождения!</p>
+                                  <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30">
+                                    <p className="text-xs font-black uppercase tracking-widest mb-1 opacity-80">Ваш подарок</p>
+                                    <div className="flex justify-between items-center">
+                                      <span className="font-black text-2xl">HAPPY-KIDS</span>
+                                      <span className="bg-white text-secondary px-3 py-1 rounded-lg text-xs font-black">-15%</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                              </motion.div>
+                            )}
+                          </div>
+                        );
+                      })}
+                      {children.length === 0 && (
+                        <div className="col-span-full py-12 text-center bg-gray-50 dark:bg-gray-800/50 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+                          <p className="text-gray-500 dark:text-gray-400 font-medium italic">Список детей пуст. Добавьте ребенка, чтобы получать бонусы!</p>
+                        </div>
+                      )}
+                    </div>
+                  </section>
+
+                  <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[32px] p-8 md:p-12">
+                    <h2 className="text-3xl font-black mb-10 text-black">Личные данные</h2>
 
                     {/* Avatar Upload */}
                     <div className="flex flex-col md:flex-row items-center gap-8 mb-10">
@@ -269,7 +348,7 @@ export default function Profile() {
                         ) : showSaveSuccess ? (
                           <><Check className="w-5 h-5" /> Сохранено</>
                         ) : (
-                          'Сохранить изменения'
+                          'Save changes'
                         )}
                       </button>
                     </div>
@@ -284,7 +363,7 @@ export default function Profile() {
                  className="space-y-12"
                >
                   <section>
-                    <h2 className="text-3xl font-black mb-8 text-gray-900 dark:text-white">Мои заказы</h2>
+                    <h2 className="text-3xl font-black mb-8 text-black">Мои заказы</h2>
                     <div className="grid gap-6">
                       {ORDERS.map((order) => (
                         <div key={order.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 hover:shadow-lg transition-all">
@@ -341,6 +420,70 @@ export default function Profile() {
 
       {/* Profile Save Confirmation Modal */}
       <AnimatePresence>
+        {showAddChild && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAddChild(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-[32px] shadow-2xl p-8"
+            >
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="text-2xl font-black text-black">Добавить ребенка</h3>
+                <button 
+                  onClick={() => setShowAddChild(false)} 
+                  className="p-2 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all text-gray-400"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Имя ребенка</label>
+                  <input 
+                    type="text" 
+                    value={newChild.name}
+                    onChange={(e) => setNewChild({...newChild, name: e.target.value})}
+                    className="w-full h-14 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 text-gray-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                    placeholder="Например: Артём"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Дата рождения</label>
+                  <input 
+                    type="date" 
+                    value={newChild.date}
+                    onChange={(e) => setNewChild({...newChild, date: e.target.value})}
+                    className="w-full h-14 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 text-gray-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all font-sans"
+                  />
+                </div>
+                <button
+                  onClick={() => {
+                    if (newChild.name && newChild.date) {
+                      setChildren([...children, newChild]);
+                      setNewChild({ name: '', date: '' });
+                      setShowAddChild(false);
+                    }
+                  }}
+                  className="w-full h-14 bg-primary text-white rounded-xl font-bold hover:bg-primary-container transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 mt-4"
+                >
+                  <PlusCircle className="w-5 h-5" /> Сохранить
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Profile Save Confirmation Modal */}
+      <AnimatePresence>
         {showConfirmDialog && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <motion.div
@@ -357,7 +500,7 @@ export default function Profile() {
               className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-[32px] shadow-2xl p-8"
             >
               <div className="flex justify-between items-start mb-6">
-                <h3 className="text-2xl font-black text-gray-900 dark:text-white">Сохранить изменения?</h3>
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white">Save changes?</h3>
                 <button 
                   onClick={() => setShowConfirmDialog(false)} 
                   className="p-2 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all text-gray-400"
@@ -366,20 +509,20 @@ export default function Profile() {
                 </button>
               </div>
               <p className="text-gray-600 dark:text-gray-400 font-medium mb-8">
-                Вы уверены, что хотите обновить свои личные данные? Эта операция необратима.
+                Are you sure you want to update your personal information? This action cannot be undone.
               </p>
               <div className="flex gap-4 justify-end">
                 <button
                   onClick={() => setShowConfirmDialog(false)}
                   className="px-6 py-3 rounded-xl font-bold bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
                 >
-                  Отмена
+                  Cancel
                 </button>
                 <button
                   onClick={confirmSaveProfile}
                   className="px-6 py-3 rounded-xl font-bold bg-primary text-white hover:bg-primary-container transition-all shadow-lg shadow-primary/20"
                 >
-                  Сохранить
+                  Save
                 </button>
               </div>
             </motion.div>
